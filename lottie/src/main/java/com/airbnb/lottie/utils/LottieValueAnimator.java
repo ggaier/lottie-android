@@ -1,13 +1,14 @@
 package com.airbnb.lottie.utils;
 
 import android.animation.ValueAnimator;
+import android.view.Choreographer;
+
+import com.airbnb.lottie.LottieComposition;
+
 import androidx.annotation.FloatRange;
 import androidx.annotation.MainThread;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import android.view.Choreographer;
-
-import com.airbnb.lottie.LottieComposition;
 
 /**
  * This is a slightly modified {@link ValueAnimator} that allows us to update start and end values
@@ -119,6 +120,7 @@ public class LottieValueAnimator extends BaseLottieAnimator implements Choreogra
     if (composition == null) {
       return Float.MAX_VALUE;
     }
+    //由每一s内的帧率计算出每一帧持续的时间, 速度是用来决定是否加速或者减速播放动画.
     return Utils.SECOND_IN_NANOS / composition.getFrameRate() / Math.abs(speed);
   }
 

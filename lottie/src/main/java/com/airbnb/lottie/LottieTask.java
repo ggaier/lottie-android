@@ -2,8 +2,6 @@ package com.airbnb.lottie;
 
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.Nullable;
-import androidx.annotation.RestrictTo;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,6 +13,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 
 /**
  * Helper to run asynchronous tasks with a result.
@@ -51,9 +52,12 @@ public class LottieTask<T> {
 
   /**
    * runNow is only used for testing.
+   * 创建一个task, 然后把该Task 加入到Executor中.
    */
   @RestrictTo(RestrictTo.Scope.LIBRARY)
   LottieTask(Callable<LottieResult<T>> runnable, boolean runNow) {
+    // WB_ANDROID: 2018/12/10 5:18 PM 初始化task, 并加入到Executor 中.
+    // 不明白这里为什么不用FutureTask的结束回调呢?
     task = new FutureTask<>(runnable);
 
     if (runNow) {

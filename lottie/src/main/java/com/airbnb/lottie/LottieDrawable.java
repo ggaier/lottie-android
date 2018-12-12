@@ -12,12 +12,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import androidx.annotation.FloatRange;
-import androidx.annotation.IntDef;
-import androidx.annotation.IntRange;
-import androidx.annotation.MainThread;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
@@ -40,6 +34,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import androidx.annotation.FloatRange;
+import androidx.annotation.IntDef;
+import androidx.annotation.IntRange;
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * This can be used to show an lottie animation in any place that would normally take a drawable.
@@ -97,13 +98,17 @@ public class LottieDrawable extends Drawable implements Drawable.Callback, Anima
   public static final int INFINITE = ValueAnimator.INFINITE;
 
   public LottieDrawable() {
-    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-      @Override public void onAnimationUpdate(ValueAnimator animation) {
-        if (compositionLayer != null) {
-          compositionLayer.setProgress(animator.getAnimatedValueAbsolute());
-        }
-      }
-    });
+    // WB_ANDROID: 2018/12/10 5:49 PM 这里监听VSYNC_SOURCE_APP事件, 用来更新动画
+    animator.addUpdateListener(
+        new ValueAnimator.AnimatorUpdateListener() {
+          @Override
+          public void onAnimationUpdate(ValueAnimator animation) {
+            if (compositionLayer != null) {
+                //修改动画的进度, 触发Drawable 的draw() 方法.
+              compositionLayer.setProgress(animator.getAnimatedValueAbsolute());
+            }
+          }
+        });
   }
 
   /**
@@ -183,6 +188,7 @@ public class LottieDrawable extends Drawable implements Drawable.Callback, Anima
    * @return True if the composition is different from the previously set composition, false otherwise.
    */
   public boolean setComposition(LottieComposition composition) {
+    // WB_ANDROID: 2018/12/10 5:24 PM 当LottieComposition 加载解析完成之后, 会调用到该方法
     if (this.composition == composition) {
       return false;
     }
@@ -265,6 +271,7 @@ public class LottieDrawable extends Drawable implements Drawable.Callback, Anima
   }
 
   @Override public void draw(@NonNull Canvas canvas) {
+    // WB_ANDROID: 2018/12/12 5:51 PM 最终调用view的Invalidate()方法, 然后重绘Drawable
     L.beginSection("Drawable#draw");
     if (compositionLayer == null) {
       return;

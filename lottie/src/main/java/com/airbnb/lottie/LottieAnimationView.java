@@ -10,13 +10,6 @@ import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.FloatRange;
-import androidx.annotation.MainThread;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RawRes;
-import androidx.annotation.VisibleForTesting;
-import androidx.appcompat.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.JsonReader;
@@ -31,6 +24,13 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import androidx.annotation.FloatRange;
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RawRes;
+import androidx.appcompat.widget.AppCompatImageView;
 
 /**
  * This view will load, deserialize, and display an After Effects animation exported with
@@ -384,6 +384,8 @@ import java.util.Set;
    * using {@link R.attr#lottie_cacheStrategy}.
    */
   public void setComposition(@NonNull LottieComposition composition) {
+    // WB_ANDROID: 2018/12/10 5:20 PM 当LottieTask执行完成, 并且成功的时候, 会回调到这里.
+    // 而LottieComposition 则由LottieCompositionParser来完成.
     if (L.DBG) {
       Log.v(TAG, "Set Composition \n" + composition);
     }

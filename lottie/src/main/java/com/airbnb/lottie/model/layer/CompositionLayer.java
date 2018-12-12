@@ -3,9 +3,6 @@ package com.airbnb.lottie.model.layer;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
-import androidx.annotation.FloatRange;
-import androidx.annotation.Nullable;
-import androidx.collection.LongSparseArray;
 
 import com.airbnb.lottie.L;
 import com.airbnb.lottie.LottieComposition;
@@ -20,6 +17,9 @@ import com.airbnb.lottie.value.LottieValueCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.FloatRange;
+import androidx.annotation.Nullable;
+import androidx.collection.LongSparseArray;
 public class CompositionLayer extends BaseLayer {
   @Nullable private BaseKeyframeAnimation<Float, Float> timeRemapping;
   private final List<BaseLayer> layers = new ArrayList<>();
@@ -28,11 +28,11 @@ public class CompositionLayer extends BaseLayer {
 
   @Nullable private Boolean hasMatte;
   @Nullable private Boolean hasMasks;
-
+  
   public CompositionLayer(LottieDrawable lottieDrawable, Layer layerModel, List<Layer> layerModels,
       LottieComposition composition) {
     super(lottieDrawable, layerModel);
-
+    // WB_ANDROID: 2018/12/10 6:00 PM 初始化各种layer.
     AnimatableFloatValue timeRemapping = layerModel.getTimeRemapping();
     if (timeRemapping != null) {
       this.timeRemapping = timeRemapping.createAnimation();
@@ -123,7 +123,9 @@ public class CompositionLayer extends BaseLayer {
     }
   }
 
-  @Override public void setProgress(@FloatRange(from = 0f, to = 1f) float progress) {
+  // WB_ANDROID: 2018/12/10 5:52 PM 此处是真正开始更新动画.
+  @Override
+  public void setProgress(@FloatRange(from = 0f, to = 1f) float progress) {
     super.setProgress(progress);
     if (timeRemapping != null) {
       float duration = lottieDrawable.getComposition().getDuration();

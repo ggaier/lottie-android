@@ -1,11 +1,15 @@
 package com.airbnb.lottie.model.layer;
 
 import android.annotation.SuppressLint;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
 import android.os.Build;
-import androidx.annotation.CallSuper;
-import androidx.annotation.FloatRange;
-import androidx.annotation.Nullable;
+
 import com.airbnb.lottie.L;
 import com.airbnb.lottie.LottieComposition;
 import com.airbnb.lottie.LottieDrawable;
@@ -24,6 +28,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.CallSuper;
+import androidx.annotation.FloatRange;
+import androidx.annotation.Nullable;
+// WB_ANDROID: 2018/12/11 11:30 AM AE 概念解释:
 public abstract class BaseLayer
     implements DrawingContent, BaseKeyframeAnimation.AnimationListener, KeyPathElement {
   /**
@@ -178,6 +186,7 @@ public abstract class BaseLayer
 
   @Override
   public void draw(Canvas canvas, Matrix parentMatrix, int parentAlpha) {
+    // WB_ANDROID: 2018/12/11 2:09 PM  开始绘制各种的layer
     L.beginSection(drawTraceName);
     if (!visible) {
       L.endSection(drawTraceName);
@@ -187,6 +196,7 @@ public abstract class BaseLayer
     L.beginSection("Layer#parentMatrix");
     matrix.reset();
     matrix.set(parentMatrix);
+    //应用各种Transform, scale, rotation, skew, translation.
     for (int i = parentLayers.size() - 1; i >= 0; i--) {
       matrix.preConcat(parentLayers.get(i).transform.getMatrix());
     }
@@ -202,6 +212,11 @@ public abstract class BaseLayer
       return;
     }
 
+    //关于为什么要把MatteLayer 和 MaskMode两种单独拿出来.
+    // 因为Blend Mode 改变的不是source layer的颜色值,
+    // You can’t directly animate blending modes by using keyframes,
+    // To change a blending mode at a specific time, split the layer at that time and apply the new blending mode to the
+    // part of the layer that continues.
     L.beginSection("Layer#computeBounds");
     rect.set(0, 0, 0, 0);
     getBounds(rect, matrix);
@@ -234,6 +249,7 @@ public abstract class BaseLayer
       L.endSection("Layer#saveLayer");
       clearCanvas(canvas);
       //noinspection ConstantConditions
+      //matteLayer 就是source layer, 在 underlying layer 的上边.
       matteLayer.draw(canvas, parentMatrix, alpha);
       L.beginSection("Layer#restoreLayer");
       canvas.restore();
@@ -310,6 +326,7 @@ public abstract class BaseLayer
   }
 
   private void intersectBoundsWithMatte(RectF rect, Matrix matrix) {
+    //所谓matte 就是alpha 的信息.
     if (!hasMatteOnThisLayer()) {
       return;
     }
