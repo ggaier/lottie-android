@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import androidx.annotation.Nullable;
 
 import com.airbnb.lottie.LottieComposition;
 import com.airbnb.lottie.LottieDrawable;
@@ -29,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.Nullable;
+// WB_ANDROID: 2018/12/13 10:08 AM Animate the source text of the layer.
 public class TextLayer extends BaseLayer {
   private final char[] tempCharArray = new char[1];
   private final RectF rectF = new RectF();
@@ -120,6 +121,7 @@ public class TextLayer extends BaseLayer {
     }
 
     if (lottieDrawable.useTextGlyphs()) {
+      //绘制图像字符.
       drawTextGlyphs(documentData, parentMatrix, font, canvas);
     } else {
       drawTextWithFont(documentData, font, parentMatrix, canvas);

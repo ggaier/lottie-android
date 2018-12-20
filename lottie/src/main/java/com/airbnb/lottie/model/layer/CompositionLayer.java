@@ -20,6 +20,8 @@ import java.util.List;
 import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
 import androidx.collection.LongSparseArray;
+// WB_ANDROID: 2018/12/13 2:31 PM LottieComposition 是动画的实体类, 真正进行动画绘制的是CompositionLayer, 它把
+// LottieComposition 中的各种layer 组合起来, 进行动画.
 public class CompositionLayer extends BaseLayer {
   @Nullable private BaseKeyframeAnimation<Float, Float> timeRemapping;
   private final List<BaseLayer> layers = new ArrayList<>();

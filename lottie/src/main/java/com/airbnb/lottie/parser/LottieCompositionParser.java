@@ -1,8 +1,6 @@
 package com.airbnb.lottie.parser;
 
 import android.graphics.Rect;
-import androidx.collection.LongSparseArray;
-import androidx.collection.SparseArrayCompat;
 import android.util.JsonReader;
 
 import com.airbnb.lottie.L;
@@ -19,6 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.collection.LongSparseArray;
+import androidx.collection.SparseArrayCompat;
+// WB_ANDROID: 2018/12/13 11:36 AM 解析AE 到处的json 文件
+// 这个被解析后的json 文件最终的代表实体类就是 LottieComposition. 它代表了一个Lottie动画.
+// 它包含了各种Layer, 和每个layer内部的属性; 还包括了动画属性, 比如时长, 帧率, 字体信息, 字符信息,
+// 和资源(assets)信息. 
 public class LottieCompositionParser {
 
   private LottieCompositionParser() {}

@@ -1,5 +1,6 @@
 package com.airbnb.lottie.samples
 
+import android.util.Log
 import androidx.multidex.MultiDexApplication
 import com.airbnb.lottie.L
 import com.google.gson.FieldNamingPolicy
@@ -9,8 +10,9 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-
+private const val TAG = "LottieApplication"
 class LottieApplication : MultiDexApplication() {
+
     val okHttpClient by lazy {
         OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -36,5 +38,11 @@ class LottieApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         L.DBG = true
+        printClassPath()
+    }
+
+    private fun printClassPath() {
+        val cl = Thread.currentThread().contextClassLoader
+        Log.d(TAG, "class loader: $cl")
     }
 }
